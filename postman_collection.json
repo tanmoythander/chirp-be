@@ -1,0 +1,111 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Node-express-passport-boilerplate",
+		"_postman_id": "1a55645d-d051-bd25-144b-c7dcde856dc0",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"description": "",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"url": "localhost:3000/auth/signup?username=test&password=test-test-test",
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"url": "localhost:3000/auth/login?username=test&password=test-test-test",
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"url": "localhost:3000/auth/signout",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"description": "",
+			"item": [
+				{
+					"name": "All posts",
+					"request": {
+						"url": "localhost:3000/api/posts",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "This is a PUBLIC API that doesn't need any authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Create post",
+					"request": {
+						"url": "localhost:3000/api/posts",
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"description": "This is a PRIVATE API that needs authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a post",
+					"request": {
+						"url": "localhost:3000/api/posts/45",
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"description": "This is a PRIVATE API that needs authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a specific post",
+					"request": {
+						"url": "localhost:3000/api/posts/45",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "This is a PUBLIC API that doesn't need any authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"request": {
+						"url": "localhost:3000/api/posts/45",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": "This is a PRIVATE API that needs authentication"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
