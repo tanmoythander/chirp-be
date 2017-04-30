@@ -1,59 +1,91 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
+mongoose.Promise = require('q').Promise;
+var assert = require('assert');
+var Post = mongoose.model('Post');
 
-// lock the api route 
-// lock with authenticate route
-router.use(function(req, res, next){
-	// check if request method is GET
-	// if GET, then allow it to the api
-	if (req.method ==='GET') {
-		//continue to the next middleware or request handler
+//Used for routes that must be authenticated.
+function isAuthenticated (req, res, next) {
+	// if user is authenticated in the session, call the next() to call the next request handler 
+	// Passport adds this method to request object. A middleware is allowed to add properties to
+	// request and response objects
+
+	//allow all get request methods
+	if(req.method === "GET"){
+		return next();
+	}
+	if (req.isAuthenticated()){
 		return next();
 	}
 
-	// check if user is authenticated or not
-	if(!req.isAuthenticated()){
-		// redirect to login page
-		return res.redirect('/#login');
-	}
+	// if the user is not authenticated then redirect him to the login page
+	return res.redirect('/#login');
+};
 
-	//continue to the next middleware or request handler
-	return next();
-});
+//Register the authentication middleware
+router.use('/posts', isAuthenticated);
 
 // API for all posts
 router.route('/posts')
 	.post(function(req, res) {
 		// Create a new post
-		res.send({
-			message: "TODO create a post"
+		var post = new Post();
+		post.text = req.body.text;
+		post.created_by = req.body.created_by;
+		post.save(function(err, post) {
+			if (err) {
+				return res.status(500).send(err);
+			}
+			return res.json(post);
 		});
 	})
 	.get(function(req, res) {
 		// get all posts
-		res.send({
-			message: "TODO retrieve all posts"
+		var query = Post.find(function(err, posts) {
+			if (err) {
+				return res.status(500).send(err);
+			}
+			return res.status(200).send(posts);
 		});
+
+
+		assert.ok(query.exec() instanceof require('q').makePromise);
 	});
 
 // API for a specific post
 router.route('/posts/:id')
 	.put(function(req, res) {
 		// update post
-		return res.send({
-			message: 'TODO modify the post with ID: ' + req.params.id
+		Post.findById(req.params.id, function(err, post){
+			if(err) return res.send(err);
+
+			post.created_by = req.body.created_by;
+			post.text = req.body.text;
+
+			post.save(function(err, post){
+				if(err) return res.send(err);
+
+				return res.json(post);
+			});
 		});
 	})
 	.get(function(req, res) {
 		// get post
-		return res.send({
-			message: 'TODO get the post with ID: ' + req.params.id
+		Post.findById(req.params.id, function(err, post) {
+			if (err) return res.send(err);
+
+			return res.json(post);
 		});
 	})
 	.delete(function(req, res) {
 		// delete post
-		return res.send({
-			message: 'TODO delete the post with ID: ' + req.params.id
+		Post.remove({
+			_id: req.params.id
+		}, function(err) {
+			if (err) return res.send(err);
+
+			return res.json("deleted :(");
 		});
 	});
 
