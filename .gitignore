@@ -1,2 +1,3 @@
 with-db/server/node_modules/
 without-db/server/node_modules/
+without-db/server/npm-debug.log
